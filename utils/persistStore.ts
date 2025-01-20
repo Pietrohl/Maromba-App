@@ -7,12 +7,6 @@ const powerSync = setupPowerSync();
 export const store = createStore();
 
 export const relationships = createRelationships(store);
-relationships.setRelationshipDefinition(
-  "ListsListItems",
-  "listItems",
-  "lists",
-  "list_id"
-);
 
 console.log("Creating Powersync Persister");
 export const persister = createPowerSyncPersister(store, powerSync, {
@@ -23,32 +17,15 @@ export const persister = createPowerSyncPersister(store, powerSync, {
         tableId: "users",
         rowIdColumnName: "id",
       },
-      lists: {
-        tableId: "lists",
-        rowIdColumnName: "id",
-      },
-      items: {
-        tableId: "listItems",
-        rowIdColumnName: "id",
-      },
     },
     save: {
       users: {
         tableName: "users",
         rowIdColumnName: "id",
       },
-      lists: {
-        tableName: "lists",
-        rowIdColumnName: "id",
-      },
-      items: {
-        tableName: "listItems",
-        rowIdColumnName: "id",
-      },
     },
   },
 });
-
 
 persister.startAutoLoad();
 persister.startAutoSave();

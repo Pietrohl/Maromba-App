@@ -1,4 +1,8 @@
 import { registerRootComponent } from 'expo';
+import '@azure/core-asynciterator-polyfill';
+import 'expo-router/entry';
+
+console.log('Index FIle')
 
 import App from './App';
 

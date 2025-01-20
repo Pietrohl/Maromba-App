@@ -3,13 +3,11 @@ import {
   BaseObserver,
   CrudEntry,
   PowerSyncBackendConnector,
-  PowerSyncCredentials,
-  PowerSyncDatabase,
   UpdateType,
 } from "@powersync/react-native";
-import Constants from "expo-constants";
 
-import { Session, SupabaseClient, createClient } from '@supabase/supabase-js';
+import { Session, SupabaseClient, createClient } from "@supabase/supabase-js";
+import { KVStorage } from "./KVStorage";
 
 export type SupabaseConfig = {
   supabaseUrl: string;
@@ -21,12 +19,12 @@ export type SupabaseConfig = {
 const FATAL_RESPONSE_CODES = [
   // Class 22 — Data Exception
   // Examples include data type mismatch.
-  new RegExp('^22...$'),
+  new RegExp("^22...$"),
   // Class 23 — Integrity Constraint Violation.
   // Examples include NOT NULL, FOREIGN KEY and UNIQUE violations.
-  new RegExp('^23...$'),
+  new RegExp("^23...$"),
   // INSUFFICIENT PRIVILEGE - typically a row-level security violation
-  new RegExp('^42501$')
+  new RegExp("^42501$"),
 ];
 
 export type SupabaseConnectorListener = {
@@ -34,13 +32,14 @@ export type SupabaseConnectorListener = {
   sessionStarted: (session: Session) => void;
 };
 
-export class Connector extends BaseObserver<SupabaseConnectorListener> implements PowerSyncBackendConnector {
+export class Connector
+  extends BaseObserver<SupabaseConnectorListener>
+  implements PowerSyncBackendConnector
+{
   readonly client: SupabaseClient;
   readonly config: SupabaseConfig;
-
-  ready: boolean;
-
-  currentSession: Session | null;
+  readonly kvStorage: KVStorage;
+  // storage: SupabaseStorageAdapter;
 
   constructor() {
     super();
@@ -49,59 +48,50 @@ export class Connector extends BaseObserver<SupabaseConnectorListener> implement
       powersyncUrl:    "",
       supabaseAnonKey: ""}
 
-    this.client = createClient(this.config.supabaseUrl, this.config.supabaseAnonKey, {
+
+
+    this.kvStorage = new KVStorage();
+    this.client = createClient(
+      this.config.supabaseUrl,
+      this.config.supabaseAnonKey,
+      {
       auth: {
-        persistSession: true
+          persistSession: true,
+          storage: this.kvStorage,
+        },
       }
-    });
-    this.currentSession = null;
-    this.ready = false;
-  }
-
-  async init() {
-    if (this.ready) {
-      return;
-    }
-
-    const sessionResponse = await this.client.auth.getSession();
-    this.updateSession(sessionResponse.data.session);
-
-    this.ready = true;
-    this.iterateListeners((cb) => cb.initialized?.());
+    );
   }
 
   async login(username: string, password: string) {
-    const {
-      data: { session },
-      error
-    } = await this.client.auth.signInWithPassword({
+    const { error } = await this.client.auth.signInWithPassword({
       email: username,
-      password: password
+      password: password,
     });
 
     if (error) {
       throw error;
     }
-
-    this.updateSession(session);
   }
 
   async fetchCredentials() {
     const {
       data: { session },
-      error
+      error,
     } = await this.client.auth.getSession();
 
     if (!session || error) {
       throw new Error(`Could not fetch Supabase credentials: ${error}`);
     }
 
-    console.debug('session expires at', session.expires_at);
+    console.debug("session expires at", session.expires_at);
 
     return {
       endpoint: this.config.powersyncUrl,
-      token: session.access_token ?? '',
-      expiresAt: session.expires_at ? new Date(session.expires_at * 1000) : undefined
+      token: session.access_token ?? "",
+      expiresAt: session.expires_at
+        ? new Date(session.expires_at * 1000)
+        : undefined,
     };
   }
 
@@ -126,10 +116,10 @@ export class Connector extends BaseObserver<SupabaseConnectorListener> implement
             result = await table.upsert(record);
             break;
           case UpdateType.PATCH:
-            result = await table.update(op.opData).eq('id', op.id);
+            result = await table.update(op.opData).eq("id", op.id);
             break;
           case UpdateType.DELETE:
-            result = await table.delete().eq('id', op.id);
+            result = await table.delete().eq("id", op.id);
             break;
         }
 
@@ -143,7 +133,10 @@ export class Connector extends BaseObserver<SupabaseConnectorListener> implement
       await transaction.complete();
     } catch (ex: any) {
       console.debug(ex);
-      if (typeof ex.code == 'string' && FATAL_RESPONSE_CODES.some((regex) => regex.test(ex.code))) {
+      if (
+        typeof ex.code == "string" &&
+        FATAL_RESPONSE_CODES.some((regex) => regex.test(ex.code))
+      ) {
         /**
          * Instead of blocking the queue with these errors,
          * discard the (rest of the) transaction.
@@ -152,7 +145,7 @@ export class Connector extends BaseObserver<SupabaseConnectorListener> implement
          * If protecting against data loss is important, save the failing records
          * elsewhere instead of discarding, and/or notify the user.
          */
-        console.error('Data upload error - discarding:', lastOp, ex);
+        console.error("Data upload error - discarding:", lastOp, ex);
         await transaction.complete();
       } else {
         // Error may be retryable - e.g. network error or temporary server error.
@@ -160,13 +153,5 @@ export class Connector extends BaseObserver<SupabaseConnectorListener> implement
         throw ex;
       }
     }
-  }
-
-  updateSession(session: Session | null) {
-    this.currentSession = session;
-    if (!session) {
-      return;
-    }
-    this.iterateListeners((cb) => cb.sessionStarted?.(session));
   }
 }
