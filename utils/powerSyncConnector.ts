@@ -44,18 +44,17 @@ export class Connector
   constructor() {
     super();
     this.config = {
-      supabaseUrl: "",
-      powersyncUrl:    "",
-      supabaseAnonKey: ""}
-
-
+      supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL ?? "",
+      powersyncUrl: process.env.EXPO_PUBLIC_POWERSYNC_INSTANCE_URL ?? "",
+      supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_PUBLIC_KEY ?? "",
+    };
 
     this.kvStorage = new KVStorage();
     this.client = createClient(
       this.config.supabaseUrl,
       this.config.supabaseAnonKey,
       {
-      auth: {
+        auth: {
           persistSession: true,
           storage: this.kvStorage,
         },

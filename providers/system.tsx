@@ -2,12 +2,10 @@ import { db } from "@/utils/database";
 import { GoogleOIDClient } from "@/utils/googleOIDClient";
 import { Connector } from "@/utils/powerSyncConnector";
 import {
-  PowerSyncContext,
   PowerSyncDatabase,
   SyncStreamConnectionMethod,
 } from "@powersync/react-native";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { Session, User } from "@supabase/supabase-js";
+import { Session } from "@supabase/supabase-js";
 import React, {
   createContext,
   PropsWithChildren,
@@ -46,7 +44,6 @@ export const SystemProvider = ({ children }: PropsWithChildren<any>) => {
 
   useEffect(() => {
     connector.client.auth.getSession().then(({ data }) => {
-      console.log("Session from Supabase: ", data.session);
       setSession(data.session);
     });
   }, []);
@@ -64,7 +61,6 @@ export const SystemProvider = ({ children }: PropsWithChildren<any>) => {
   // Sign in with provided email and password
   const signIn = useCallback(
     async (email: string, password: string) => {
-      console.log("singin In");
       setLoading(true);
       setError("");
       setSession(null);
@@ -75,11 +71,14 @@ export const SystemProvider = ({ children }: PropsWithChildren<any>) => {
           data: { session, user },
           error,
         } = await connector.client.auth.signInWithPassword({
-          email: "user@example.com",
-          password: "test",
+          email,
+          password,
         });
 
-        console.log("ERROR is: ", error);
+        if (error) {
+          setError(error.message);
+          return;
+        }
 
         // if we have a session and user, sign them in
         if (session && user) {
@@ -91,7 +90,6 @@ export const SystemProvider = ({ children }: PropsWithChildren<any>) => {
           setSession(null);
         }
       } catch (error: any) {
-        console.log("Error!!!!");
         setError(error?.message ?? "Unknown error");
         setSignedIn(false);
         setSession(null);
