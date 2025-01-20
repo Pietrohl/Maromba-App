@@ -1,12 +1,21 @@
-import { config } from '@tamagui/config/v3'
-import { createTamagui } from 'tamagui'
+import { config } from "@tamagui/config/v3";
+import { color, radius, size, space, themes, zIndex } from "@tamagui/themes";
+import { createTamagui, createTokens } from "tamagui";
 
-export const tamaguiConfig = createTamagui(config)
+const tokens = createTokens({
+  size,
+  space,
+  zIndex,
+  color,
+  radius,
+});
 
-export default tamaguiConfig
+export const tamaguiConfig = createTamagui({ ...config, tokens, themes });
 
-export type Conf = typeof tamaguiConfig
+export default tamaguiConfig;
 
-declare module 'tamagui' {
+export type Conf = typeof tamaguiConfig;
+
+declare module "tamagui" {
   interface TamaguiCustomConfig extends Conf {}
 }

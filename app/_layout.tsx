@@ -17,8 +17,6 @@ if (Platform.OS === "web") {
   require("@tamagui/core/reset.css");
 }
 
-
-
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
