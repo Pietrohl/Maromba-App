@@ -145,9 +145,7 @@ export const SystemProvider = ({ children }: PropsWithChildren<any>) => {
   // Sign in with google
   const signInWithGoogle = useCallback(async () => {
     try {
-      console.log("Signing in with google");
       const userInfo = await googleOIDClient.signIn();
-      console.log("User info: ", userInfo);
       if (userInfo?.data?.idToken) {
         const { data, error } = await connector.client.auth.signInWithIdToken({
           provider: "google",

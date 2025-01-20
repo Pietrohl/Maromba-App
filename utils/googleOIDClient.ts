@@ -5,7 +5,6 @@ import {
 
 export class GoogleOIDClient {
   constructor() {
-    console.log("GoogleOIDClient constructor");
     GoogleSignin.configure({
       scopes: ["https://www.googleapis.com/auth/userinfo.email"],
       webClientId:
@@ -22,7 +21,6 @@ export class GoogleOIDClient {
       console.error("Error Signing on google", JSON.stringify(error));
       return error;
     });
-    console.log("User info", userInfo);
     return userInfo;
   }
 }
