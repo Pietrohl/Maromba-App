@@ -2,12 +2,12 @@ import "@azure/core-asynciterator-polyfill";
 import { useEffect } from "react";
 import { Platform, useColorScheme } from "react-native";
 import { useFonts } from "expo-font";
-import { Slot } from "expo-router";
+import { Link, Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { TamaguiProvider, Theme } from "tamagui";
 import "react-native-reanimated";
 import tamaguiConfig from "@/tamagui.config";
-import { SystemProvider } from "@/providers/system";
+import { SystemProvider } from "@/providers/System";
 
 if (__DEV__) {
   require("../ReactotronConfig");
@@ -38,13 +38,23 @@ export default function RootLayout() {
     return null;
   }
 
+  if (Platform.OS === "web") {
+    // Use a basic custom layout on web.
+    return (
+      <div style={{ flex: 1 }}>
+        <header>
+          <Link href="/">Home</Link>
+        </header>
+        <Slot />
+      </div>
+    );
+  }
+
   return (
     <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
-      <Theme name="dark">
-        <SystemProvider>
-          <Slot />
-        </SystemProvider>
-      </Theme>
+      <SystemProvider>
+        <Slot />
+      </SystemProvider>
     </TamaguiProvider>
   );
 }

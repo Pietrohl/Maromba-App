@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { SystemContext } from "../providers/system";
+import { SystemContext } from "../providers/System";
 
 export const useAuth = () => {
   const context = useContext(SystemContext);
