@@ -1,7 +1,6 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import React from "react";
 import { Accordion, H4, Square, YStack, Text } from "tamagui";
-import WithSchema from "@/utils/UiReactWithSchemas";
 
 export function AppAccordion<ComponentParams>({
   title,

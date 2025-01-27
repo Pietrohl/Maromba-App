@@ -1,15 +1,14 @@
 import "@azure/core-asynciterator-polyfill";
-import {
-  PowerSyncDatabase,
-} from "@powersync/react-native";
+import { PowerSyncDatabase } from "@powersync/react-native";
 import { Connector } from "./powerSyncConnector";
-import { AppSchema } from "./appSchema";
+import { AppSchema, drizzleSchema } from "./appSchema";
+import { wrapPowerSyncWithDrizzle } from "@powersync/drizzle-driver";
 
 /**
  * Instantiate the local PowerSync database
  * This uses react-native-quick-sqlite to open a SQLite database file
  */
-export const db = new PowerSyncDatabase({
+export const powerSyncDb = new PowerSyncDatabase({
   // The schema you defined in the previous step
   schema: AppSchema,
   database: {
@@ -20,11 +19,7 @@ export const db = new PowerSyncDatabase({
   },
 });
 
-export const setupPowerSync = () => {
-  // Uses the backend connector that will be created in the next section
-  const connector = new Connector(); 
-  db.connect(connector);
-  return db;
-};
+export const db = wrapPowerSyncWithDrizzle(powerSyncDb as unknown as any, {
+  schema: drizzleSchema,
+});
 
-db.init()

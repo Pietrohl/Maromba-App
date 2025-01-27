@@ -17,7 +17,6 @@ import React from "react";
 import { useUser } from "@/hooks/useUser";
 import { RoutineCard } from "../../../components/RoutineCard";
 import { AppAccordion } from "@/components/AppAccordion";
-import WithSchema from "@/utils/UiReactWithSchemas";
 
 const otherPlans = [
   { name: "Push/Pull/Legs", routines: 6 },
@@ -35,41 +34,9 @@ const otherRoutines = [
 export default function Train() {
   const user = useUser();
 
-  const relentionship = WithSchema.useRelationships();
-  const queries = WithSchema.useQueries();
 
-  const queryPlanBasic = ({ select, join }) => {
-    select((_, trainingPlanId) => trainingPlanId).as("training_plan_id");
-    select("name");
-  };
 
-  queries?.setQueryDefinition(
-    "query",
-    "training_plan_routines",
-    ({ select, join, group }) => {
-      select("routine_id");
-      select("training_plan_id");
-      select("training_plan", "name");
-      select("training_plan", "total_days");
-      select("training_plan", "is_template");
-      join('user_training_routines', 'routine_id');
-      select('user_training_routines', 'name').as('routine_name');
-      group("routine_id", "count").as('count');
-      join("training_plan", "training_plan_id");
-      group("training_plan", (id) => id[0]);
-    }
-  );
-
-  console.log("Query", queries?.getResultRowCount("query") || "No Data");
-  console.log("Query Table", queries?.getResultTable("query") || "No Data");
- 
-  const otherUserPlans = WithSchema.useRowIds("training_plan")
-    .map((id) => id)
-    .filter((id) => id !== user?.active_plan_id);
-  const currentPlanRoutines = relentionship?.getLocalRowIds(
-    "trainingPlanRoutines",
-    user?.active_plan_id || ""
-  );
+  
 
   return (
     <MySafeAreaView>
@@ -107,24 +74,16 @@ export default function Train() {
                 </Card>
               </YStack>
               {/* Plan Progress */}
-              {currentPlanRoutines && (
+              {otherRoutines && (
                 <AppAccordion
-                  data={currentPlanRoutines}
-                  RenderComponent={(id) => (
+                  data={otherRoutines}
+                  RenderComponent={({name, exercises}) => (
                     <RoutineCard
-                      name={
-                        WithSchema.useCell(
-                          "user_training_routines",
-                          id,
-                          "name"
-                        ) || ""
+                      name={ name
                       }
-                      key={id}
+                      key={name}
                       exercises={
-                        relentionship?.getLocalRowIds(
-                          "trainingPlanRoutinesDetails",
-                          id
-                        ) || []
+                        exercises
                       }
                     />
                   )}
@@ -138,24 +97,13 @@ export default function Train() {
           {/* Other Plans Section */}
 
           <AppAccordion
-            data={otherUserPlans.map((id) => ({ id }))}
-            RenderComponent={({ id }) => {
-              const count = relentionship?.getLocalRowIds(
-                "trainingPlanRoutines",
-                id
-              ).length;
+            data={otherPlans}
+            RenderComponent={({ name, routines }) => {
+            
               return (
                 <PlanFolder
-                  name={
-                    (
-                      <WithSchema.CellView
-                        tableId="training_plan"
-                        rowId={id}
-                        cellId="name"
-                      />
-                    ) as unknown as string
-                  }
-                  routines={count?.toString() || "0"}
+                  name={name}
+                  routines={routines?.toString() || "0"}
                 />
               );
             }}

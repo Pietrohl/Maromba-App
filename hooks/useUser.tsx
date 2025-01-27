@@ -1,29 +1,40 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "./useAuth";
-import { Database } from "@/utils/appSchema";
-import UiReactWithSchemas from "@/utils/UiReactWithSchemas";
+import { Database, drizzleSchema ,DatabaseTest} from "@/utils/appSchema";
+import { eq } from "drizzle-orm";
 
-type User = Exclude<Database["users"], "id"> & {
-  name: string;
-  email: string;
-  email_confirmed_at: string;
+type User = Exclude<DatabaseTest["users"], "name" |"id"> & {
+  name: string | null | undefined;
+  email?: string;
+  email_confirmed_at?: string;
 };
 
 export const useUser = () => {
-  const { session } = useAuth();
-  const profile = UiReactWithSchemas.useRow("users", session?.user.id || "");
+  const { session, database } = useAuth();
+  const [user, setUser] = useState<User | null>(null);
+  
 
-  const [user, setUser] = useState<Partial<User> | null>(null);
-
+  
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!session || !profile) return;
-      const { email, email_confirmed_at, id } = session.user;
+      if (!session?.user  ) return;
+      
+      const id = session?.user.id
+      if(id){
+      const profile =  await database.query.users.findMany()
+
+      console.log(`Profile`, profile);
+      console.log(`id`, id);
+
+
+
+      const {email,email_confirmed_at} = session.user
+
       setUser({ ...profile, id, email, email_confirmed_at });
-    };
+}    };
 
     fetchUserData();
-  }, [session, profile]);
+  }, [session]);
 
   return user;
 };

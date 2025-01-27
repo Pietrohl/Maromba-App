@@ -1,4 +1,4 @@
-import { db } from "@/utils/database";
+import { db, powerSyncDb } from "@/utils/database";
 import { GoogleOIDClient } from "@/utils/googleOIDClient";
 import { Connector } from "@/utils/powerSyncConnector";
 import {
@@ -14,6 +14,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { PowerSyncSQLiteDatabase } from "@powersync/drizzle-driver";
 export type SystemContextType = {
   signIn: (email: string, password: string) => void;
   signInWithGoogle: () => void;
@@ -24,7 +25,7 @@ export type SystemContextType = {
   loading: boolean;
   error: string;
   session: Session | null;
-  powerSync: PowerSyncDatabase;
+  database: typeof db;
 };
 
 // We initialize the context with null to ensure that it is not used outside of the provider
@@ -36,7 +37,8 @@ export const SystemContext = createContext<SystemContextType | null>(null);
 export const SystemProvider = ({ children }: PropsWithChildren<any>) => {
   const [connector] = useState(new Connector());
   const [googleOIDClient] = useState(new GoogleOIDClient());
-  const [powerSync] = useState(db);
+  const [powerSync] = useState(powerSyncDb);
+  const [database] = useState(db);
   const [signedIn, setSignedIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -172,7 +174,7 @@ export const SystemProvider = ({ children }: PropsWithChildren<any>) => {
       loading,
       error,
       session,
-      powerSync,
+      database,
       initDB,
     }),
     [
@@ -184,7 +186,7 @@ export const SystemProvider = ({ children }: PropsWithChildren<any>) => {
       loading,
       error,
       session,
-      powerSync,
+      database,
       initDB,
     ]
   );

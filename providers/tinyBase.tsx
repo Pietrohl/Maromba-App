@@ -17,7 +17,7 @@ import UiReactWithSchemas from "@/utils/UiReactWithSchemas";
 export const TinyBaseProvider = ({ children }: PropsWithChildren<any>) => {
   const store = createStore().setSchema(tablesSchema, valuesSchema);
 
-  const { powerSync, initDB, session } = useAuth();
+  const { database: powerSync, initDB, session } = useAuth();
 
   useEffect(() => {
     initDB();

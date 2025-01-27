@@ -6,7 +6,6 @@ import * as SplashScreen from "expo-splash-screen";
 import { Text } from "tamagui";
 import "react-native-reanimated";
 import { useAuth } from "@/hooks/useAuth";
-import { TinyBaseProvider } from "@/providers/TinyBase";
 
 if (Platform.OS === "web") {
   require("@tamagui/core/reset.css");
@@ -26,12 +25,10 @@ export default function RootLayout() {
   }
 
   return (
-    <TinyBaseProvider>
       <Suspense fallback={<Text>Loading...</Text>}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack>
       </Suspense>
-    </TinyBaseProvider>
   );
 }
