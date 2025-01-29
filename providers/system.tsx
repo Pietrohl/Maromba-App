@@ -2,6 +2,7 @@ import { db, powerSyncDb } from "@/utils/database";
 import { GoogleOIDClient } from "@/utils/googleOIDClient";
 import { Connector } from "@/utils/powerSyncConnector";
 import {
+  PowerSyncContext,
   SyncStreamConnectionMethod,
 } from "@powersync/react-native";
 import { Session } from "@supabase/supabase-js";
