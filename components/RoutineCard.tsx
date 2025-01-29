@@ -2,10 +2,11 @@ import React from "react";
 import { Card, XStack, H4, Paragraph } from "tamagui";
 
 export function RoutineCard({
-  name, exercises,
+  name,
+  exercises,
 }: {
   name: string;
-  exercises: string[];
+  exercises: { name: string | null }[];
 }) {
   return (
     <Card elevate>
@@ -19,7 +20,7 @@ export function RoutineCard({
         <XStack flexWrap="wrap" gap="$2">
           {exercises.map((ex, i) => (
             <Paragraph key={i} theme="alt2">
-              {ex}
+              {ex.name}
             </Paragraph>
           ))}
         </XStack>

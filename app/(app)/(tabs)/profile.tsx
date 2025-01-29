@@ -1,9 +1,9 @@
-import { useAuth } from '@/hooks/useAuth';
+import { useSystem } from '@/hooks/useSystem';
 import { Text, View } from 'react-native';
 
 
 export default function Profile() {
-  const { signOut } = useAuth();
+  const { signOut } = useSystem();
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text

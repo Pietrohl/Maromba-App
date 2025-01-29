@@ -1,37 +1,50 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "./useAuth";
-import { Database, drizzleSchema ,DatabaseTest} from "@/utils/appSchema";
-import { eq } from "drizzle-orm";
+import { useSystem } from "./useSystem";
+import { Database } from "@/utils/appSchema";
+import { powerSyncDb } from "@/utils/database";
 
-type User = Exclude<DatabaseTest["users"], "name" |"id"> & {
-  name: string | null | undefined;
+type User = Exclude<Partial<Database["users"]>, "name" | "id"> & {
+  name?: string | null;
   email?: string;
   email_confirmed_at?: string;
 };
 
 export const useUser = () => {
-  const { session, database } = useAuth();
+  const { session, database } = useSystem();
   const [user, setUser] = useState<User | null>(null);
-  
 
-  
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!session?.user  ) return;
-      
-      const id = session?.user.id
-      if(id){
-      const profile =  await database.query.users.findMany()
+      if (!session?.user) return;
 
-      console.log(`Profile`, profile);
-      console.log(`id`, id);
+      const id = session?.user.id;
+      if (id) {
+        const query = database
+          .selectFrom(`users`)
+          .where(`id`, "=", id)
+          .selectAll();
+        const profile = await query.executeTakeFirst();
 
+        // console.log(`Profile`, profile);
+        // console.log(`id`, id);
 
+        database.watch(query, {
+          onResult(results) {
+            setUser(results[0]);
+          },
+        });
 
-      const {email,email_confirmed_at} = session.user
+        powerSyncDb.watch("SELECT * FROM users", [], {
+          onResult(results) {
+            // console.log("PowerSync Wathc Results", results.rows?._array);
+          },
+        });
 
-      setUser({ ...profile, id, email, email_confirmed_at });
-}    };
+        const { email, email_confirmed_at } = session.user;
+
+        setUser({ ...profile, id, email, email_confirmed_at });
+      }
+    };
 
     fetchUserData();
   }, [session]);

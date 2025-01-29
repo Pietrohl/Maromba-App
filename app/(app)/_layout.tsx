@@ -5,7 +5,7 @@ import { Redirect, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { Text } from "tamagui";
 import "react-native-reanimated";
-import { useAuth } from "@/hooks/useAuth";
+import { useSystem } from "@/hooks/useSystem";
 
 if (Platform.OS === "web") {
   require("@tamagui/core/reset.css");
@@ -14,7 +14,9 @@ if (Platform.OS === "web") {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const { loading, session } = useAuth();
+  const { loading, session, initDB } = useSystem();
+
+  initDB()
 
   if (loading) {
     return <Text>Loading...</Text>;

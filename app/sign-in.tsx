@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Button, Input, Spacer, Stack, Text, YStack } from "tamagui";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { useAuth } from "@/hooks/useAuth";
+import { useSystem } from "@/hooks/useSystem";
 import { router } from "expo-router";
 import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
 
@@ -17,7 +17,7 @@ function SignIn() {
       password: "",
     },
   });
-  const { signIn, loading, session, signInWithGoogle } = useAuth();
+  const { signIn, loading, session, signInWithGoogle } = useSystem();
   const onSubmit: SubmitHandler<{ email: string; password: string }> = (
     data
   ) => {

@@ -2,7 +2,6 @@ import { db, powerSyncDb } from "@/utils/database";
 import { GoogleOIDClient } from "@/utils/googleOIDClient";
 import { Connector } from "@/utils/powerSyncConnector";
 import {
-  PowerSyncDatabase,
   SyncStreamConnectionMethod,
 } from "@powersync/react-native";
 import { Session } from "@supabase/supabase-js";
@@ -14,7 +13,6 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { PowerSyncSQLiteDatabase } from "@powersync/drizzle-driver";
 export type SystemContextType = {
   signIn: (email: string, password: string) => void;
   signInWithGoogle: () => void;

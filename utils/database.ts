@@ -1,8 +1,10 @@
 import "@azure/core-asynciterator-polyfill";
 import { PowerSyncDatabase } from "@powersync/react-native";
+import { AbstractPowerSyncDatabase } from "@powersync/web";
 import { Connector } from "./powerSyncConnector";
-import { AppSchema, drizzleSchema } from "./appSchema";
-import { wrapPowerSyncWithDrizzle } from "@powersync/drizzle-driver";
+import { AppSchema, Database } from "./appSchema";
+import { wrapPowerSyncWithKysely } from "@powersync/kysely-driver";
+import { ParseJSONResultsPlugin } from "kysely";
 
 /**
  * Instantiate the local PowerSync database
@@ -19,7 +21,11 @@ export const powerSyncDb = new PowerSyncDatabase({
   },
 });
 
-export const db = wrapPowerSyncWithDrizzle(powerSyncDb as unknown as any, {
-  schema: drizzleSchema,
-});
+export const db = wrapPowerSyncWithKysely<Database>(
+  powerSyncDb as unknown as AbstractPowerSyncDatabase,
+  {
+    plugins: [new ParseJSONResultsPlugin()],
+  }
+);
 
+powerSyncDb.init();
