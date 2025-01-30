@@ -16,47 +16,14 @@ import  React, { useMemo } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { RoutineCard } from "@/components/RoutineCard";
 import { AppAccordion } from "@/components/AppAccordion";
-import { useSystem } from "@/hooks/useSystem";
-import { useQuery } from "../../../hooks/useQuery";
-import { routinesQuery } from "../../../utils/queries/routinesQuery";
-import { detailedTrainingPlansQuery } from "../../../utils/queries/detailedTrainingPlansQuery";
-import { getTrainningPlans } from "../../../utils/queries/getTrainningPlansQuery";
+import { TrainingPlanCard } from "@/components/TrainningPlanCard";
+import {
+  useTrainningPlan,
+  getAllTrainningPlans,
+  useRoutinesFromPlan,
+} from "../../../hooks/dataQueries";
+import { NextRoutineCard } from "@/components/NextRoutineCard";
 
-const useTrainningPlan = (id: string | string[]) => {
-  const { database } = useSystem();
-
-  const activeTrainingPlanQuery = useMemo(
-    () => detailedTrainingPlansQuery(database, id),
-    [id]
-  );
-
-  const { data } = useQuery(activeTrainingPlanQuery);
-  return data[0];
-};
-
-const getAllTrainningPlans = (exclude: string[] | string = "") => {
-  const { database } = useSystem();
-  const activePlanId = useUser()?.active_plan_id;
-
-  const plansQuery = useMemo(
-    () => getTrainningPlans(database, exclude),
-    [activePlanId]
-  );
-
-  const { data: plans } = useQuery(plansQuery);
-
-  return plans;
-};
-
-const useRoutinesFromPlan = (planId: string | string[]) => {
-  const { database } = useSystem();
-
-  const query = useMemo(() => {
-    return routinesQuery(database, planId);
-  }, [planId]);
-
-  return useQuery(query).data;
-};
 
 export default function Train() {
   const { user } = useAuth();
@@ -83,29 +50,7 @@ export default function Train() {
                 </H4>
                 {/* Up Next Card */}
                 {activeTrainingPlan.routines[0] && (
-                  <Card elevate mb="$3" height="500" size="$4">
-                    <Card.Header>
-                      <H3>{activeTrainingPlan.routines[0].name}</H3>
-                      <Paragraph>
-                        3 exercises • 15 sets - Est. 60 mins
-                      </Paragraph>
-                    </Card.Header>
-                    <YStack padding="$true" flexWrap="wrap" gap="$2">
-                      {activeTrainingPlan.routines[0].exercises.map(
-                        (exercise) => (
-                          <Paragraph theme="alt2" key={exercise.id}>
-                            {exercise.name} {exercise.sets} 70kg
-                          </Paragraph>
-                        )
-                      )}
-                    </YStack>
-                    <Card.Footer padded>
-                      <XStack flex={1} />
-                      <Button theme="active" width={"100%"}>
-                        Start Routine
-                      </Button>
-                    </Card.Footer>
-                  </Card>
+                  <NextRoutineCard routine={activeTrainingPlan.routines[0]} />
                 )}
               </YStack>
               {/* Plan Progress */}
@@ -132,7 +77,7 @@ export default function Train() {
               data={otherPlans}
               RenderComponent={({ name, uniqueRoutines }) => {
                 return (
-                  <PlanFolder
+                  <TrainingPlanCard
                     name={name!}
                     routines={uniqueRoutines?.toString() || "0"}
                   />
@@ -151,17 +96,5 @@ export default function Train() {
         </MyStack>
       </ScrollView>
     </MySafeAreaView>
-  );
-}
-
-// Plan Folder Component
-function PlanFolder({ name, routines }: { name: string; routines: string }) {
-  return (
-    <XStack ai="center" gap="$3" p="$2" bg="$backgroundHover" borderRadius="$2">
-      <YStack>
-        <Paragraph fontWeight="500">{name}</Paragraph>
-        <Paragraph theme="alt2">{routines} routines</Paragraph>
-      </YStack>
-    </XStack>
   );
 }
