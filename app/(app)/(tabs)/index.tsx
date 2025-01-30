@@ -12,7 +12,7 @@ import {
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { MySafeAreaView } from "@/components/MySafeAreaView";
 import { MyStack } from "@/components/MyStack";
-import  React, { useMemo } from "react";
+import React, { useMemo } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { RoutineCard } from "@/components/RoutineCard";
 import { AppAccordion } from "@/components/AppAccordion";
@@ -23,7 +23,6 @@ import {
   useRoutinesFromPlan,
 } from "../../../hooks/dataQueries";
 import { NextRoutineCard } from "@/components/NextRoutineCard";
-
 
 export default function Train() {
   const { user } = useAuth();
@@ -56,38 +55,40 @@ export default function Train() {
               {/* Plan Progress */}
               {otherRoutines && (
                 <AppAccordion
-                  data={otherRoutines}
-                  RenderComponent={({ name, exercises }) => (
-                    <RoutineCard
-                      name={name || ""}
-                      key={name}
-                      exercises={exercises}
-                    />
-                  )}
-                  itemValue="current-plan"
-                  title="Current Plan Routines"
-                  type="multiple"
+                  data={[
+                    {
+                      content: otherRoutines,
+                      itemValue: "current-plan",
+                      title: "Current Plan Routines",
+                      RenderComponent: ({ name, exercises }: any) => (
+                        <RoutineCard
+                          name={name || ""}
+                          key={name}
+                          exercises={exercises}
+                        />
+                      ),
+                    },
+                    {
+                      content: otherPlans,
+                      itemValue: "other-plans",
+                      title: "Other Training Plans",
+                      RenderComponent: ({ name, uniqueRoutines }: any) => {
+                        return (
+                          <TrainingPlanCard
+                            name={name!}
+                            routines={uniqueRoutines?.toString() || "0"}
+                          />
+                        );
+                      },
+                    },
+                  ]}
+                  type="single"
+                  collapsible={true}
                 />
               )}
             </>
           )}
           {/* Other Plans Section */}
-          {otherPlans && (
-            <AppAccordion
-              data={otherPlans}
-              RenderComponent={({ name, uniqueRoutines }) => {
-                return (
-                  <TrainingPlanCard
-                    name={name!}
-                    routines={uniqueRoutines?.toString() || "0"}
-                  />
-                );
-              }}
-              itemValue="other-plans"
-              title="Other Training Plans"
-              type="multiple"
-            />
-          )}
           <YStack gap="$4" flex={1}>
             <Button icon={<FontAwesome name="plus" />}>
               Create standalone routine
