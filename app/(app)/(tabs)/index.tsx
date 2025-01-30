@@ -12,9 +12,9 @@ import {
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { MySafeAreaView } from "@/components/MySafeAreaView";
 import { MyStack } from "@/components/MyStack";
-import React, { useMemo } from "react";
-import { useUser } from "@/hooks/useUser";
-import { RoutineCard } from "../../../components/RoutineCard";
+import  React, { useMemo } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { RoutineCard } from "@/components/RoutineCard";
 import { AppAccordion } from "@/components/AppAccordion";
 import { useSystem } from "@/hooks/useSystem";
 import { useQuery } from "../../../hooks/useQuery";
@@ -59,7 +59,7 @@ const useRoutinesFromPlan = (planId: string | string[]) => {
 };
 
 export default function Train() {
-  const user = useUser();
+  const { user } = useAuth();
 
   const activePlanId = user?.active_plan_id || "";
   const activeTrainingPlan = useTrainningPlan(activePlanId);

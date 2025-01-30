@@ -8,6 +8,7 @@ import { TamaguiProvider, Theme } from "tamagui";
 import "react-native-reanimated";
 import tamaguiConfig from "@/tamagui.config";
 import { SystemProvider } from "@/providers/System";
+import { AuthProvider } from "@/providers/AuthContext";
 
 if (__DEV__) {
   require("../ReactotronConfig");
@@ -24,13 +25,6 @@ export default function RootLayout() {
     Inter: require("@tamagui/font-inter/otf/Inter-Medium.otf"),
     InterBold: require("@tamagui/font-inter/otf/Inter-Bold.otf"),
   });
-
-  useEffect(() => {
-    if (loaded) {
-      console.log("fonts Loaded");
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
 
   const colorScheme = useColorScheme();
 
@@ -53,7 +47,9 @@ export default function RootLayout() {
   return (
     <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
       <SystemProvider>
-        <Slot />
+        <AuthProvider>
+          <Slot />
+        </AuthProvider>
       </SystemProvider>
     </TamaguiProvider>
   );
