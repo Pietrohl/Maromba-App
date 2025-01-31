@@ -1,10 +1,7 @@
 import { db, powerSyncDb } from "@/utils/database";
 import { GoogleOIDClient } from "@/utils/googleOIDClient";
 import { Connector } from "@/utils/powerSyncConnector";
-import {
-  PowerSyncContext,
-  SyncStreamConnectionMethod,
-} from "@powersync/react-native";
+import { SyncStreamConnectionMethod } from "@powersync/react-native";
 import { Session } from "@supabase/supabase-js";
 import React, {
   createContext,
@@ -43,6 +40,7 @@ export const SystemProvider = ({ children }: PropsWithChildren<any>) => {
   const [error, setError] = useState("");
   const [session, setSession] = useState<Session | null>(null);
 
+  console.log("System Context");
   useEffect(() => {
     connector.client.auth.getSession().then(({ data }) => {
       setSession(data.session);

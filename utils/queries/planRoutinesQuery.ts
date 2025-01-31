@@ -3,7 +3,7 @@ import { Expression } from "kysely";
 import { routineExercisesQuery } from "@/utils/queries/routineExercisesQuery";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
 
-export const routinesQuery = (
+export const planRoutinesQuery = (
   database: typeof db,
   planId: Expression<string | null> | string | string[] = ""
 ) => database

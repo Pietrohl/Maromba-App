@@ -1,18 +1,8 @@
-import {
-  Card,
-  Button,
-  H3,
-  YStack,
-  XStack,
-  H2,
-  H4,
-  Paragraph,
-  ScrollView,
-} from "tamagui";
+import { Button, YStack, XStack, H2, H4, ScrollView } from "tamagui";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { MySafeAreaView } from "@/components/MySafeAreaView";
 import { MyStack } from "@/components/MyStack";
-import React, { useMemo } from "react";
+import React from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { RoutineCard } from "@/components/RoutineCard";
 import { AppAccordion } from "@/components/AppAccordion";
@@ -21,16 +11,20 @@ import {
   useTrainningPlan,
   getAllTrainningPlans,
   useRoutinesFromPlan,
-} from "../../../hooks/dataQueries";
+  useStandaloneRoutines,
+} from "../../../../hooks/dataQueries";
 import { NextRoutineCard } from "@/components/NextRoutineCard";
 
 export default function Train() {
   const { user } = useAuth();
 
   const activePlanId = user?.active_plan_id || "";
-  const activeTrainingPlan = useTrainningPlan(activePlanId);
-  const otherPlans = getAllTrainningPlans(activePlanId);
-  const otherRoutines = useRoutinesFromPlan(activePlanId);
+  const { data: activeTrainingPlan } = useTrainningPlan(activePlanId);
+  const { data: otherPlans } = getAllTrainningPlans(activePlanId);
+  const { data: otherRoutines } = useRoutinesFromPlan(activePlanId);
+  const { data: standaloneRoutines } = useStandaloneRoutines();
+
+  console.log("useStandaloneRoutines", standaloneRoutines);
 
   return (
     <MySafeAreaView>
@@ -58,13 +52,14 @@ export default function Train() {
                   data={[
                     {
                       content: otherRoutines,
-                      itemValue: "current-plan",
+                      itemValue: "current-plan-routines",
                       title: "Current Plan Routines",
-                      RenderComponent: ({ name, exercises }: any) => (
+                      RenderComponent: ({ name, exercises, id }) => (
                         <RoutineCard
                           name={name || ""}
                           key={name}
                           exercises={exercises}
+                          id={id}
                         />
                       ),
                     },
@@ -72,14 +67,28 @@ export default function Train() {
                       content: otherPlans,
                       itemValue: "other-plans",
                       title: "Other Training Plans",
-                      RenderComponent: ({ name, uniqueRoutines }: any) => {
+                      RenderComponent: ({ name, uniqueRoutines, id }) => {
                         return (
                           <TrainingPlanCard
                             name={name!}
                             routines={uniqueRoutines?.toString() || "0"}
+                            key={id}
                           />
                         );
                       },
+                    },
+                    {
+                      content: standaloneRoutines,
+                      itemValue: "standalone-routines",
+                      title: "Other Routines",
+                      RenderComponent: ({ name, exercises, id }) => (
+                        <RoutineCard
+                          name={name || ""}
+                          key={name}
+                          exercises={exercises}
+                          id={id}
+                        />
+                      ),
                     },
                   ]}
                   type="single"

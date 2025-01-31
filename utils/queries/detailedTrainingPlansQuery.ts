@@ -1,5 +1,5 @@
 import { db } from "@/utils/database";
-import { routinesQuery } from "@/utils/queries/routinesQuery";
+import { planRoutinesQuery } from "@/utils/queries/planRoutinesQuery";
 import { Expression } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
 
@@ -20,7 +20,7 @@ export function detailedTrainingPlansQuery(database: typeof db, id: Expression<s
       "total_days",
       "is_flexible",
     ])
-    .select(({ ref }) => jsonArrayFrom(routinesQuery(database, ref("training_plan.id"))).as(
+    .select(({ ref }) => jsonArrayFrom(planRoutinesQuery(database, ref("training_plan.id"))).as(
       "routines"
     )
     );

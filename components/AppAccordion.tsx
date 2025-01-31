@@ -5,7 +5,7 @@ import { Accordion, H4, Square, YStack, Text } from "tamagui";
 type ItemsData<ComponentParams> = {
   title: string;
   content: Array<ComponentParams>;
-  itemValue: string | string[];
+  itemValue: string;
   RenderComponent: React.ComponentType<ComponentParams>;
 };
 
@@ -17,7 +17,7 @@ export function AppAccordion({ data, ...params }: AppAccordionParams) {
   return (
     <Accordion {...params}>
       {data.map((itemData) => (
-        <Accordion.Item value={itemData.itemValue as string}>
+        <Accordion.Item value={itemData.itemValue} key={itemData.itemValue}>
           <Accordion.Trigger flexDirection="row" justifyContent="space-between">
             {({ open }: { open: boolean }) => (
               <>

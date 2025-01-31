@@ -47,9 +47,7 @@ export default function RootLayout() {
   return (
     <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
       <SystemProvider>
-        <AuthProvider>
-          <Slot />
-        </AuthProvider>
+        <Slot />
       </SystemProvider>
     </TamaguiProvider>
   );

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Button, Input, Spacer, Stack, Text, YStack } from "tamagui";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { useSystem } from "@/hooks/useSystem";
-import { router } from "expo-router";
+import { router, SplashScreen } from "expo-router";
 import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
 
 function SignIn() {
@@ -24,14 +24,12 @@ function SignIn() {
     signIn(data.email, data.password);
   };
 
-  
   useEffect(() => {
-    if (session) router.replace("/");
+    if (session) router.replace("/home");
   }, [session]);
-  
+
   if (loading) return <Text>Loading...</Text>;
 
-  
   return (
     <YStack flex={1} justifyContent="center" alignItems="center" padding={16}>
       <Stack space>

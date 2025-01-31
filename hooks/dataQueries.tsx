@@ -2,7 +2,8 @@ import { useQuery } from "@/hooks/useQuery";
 import { useSystem } from "@/hooks/useSystem";
 import { detailedTrainingPlansQuery } from "@/utils/queries/detailedTrainingPlansQuery";
 import { getTrainningPlans } from "@/utils/queries/getTrainningPlansQuery";
-import { routinesQuery } from "@/utils/queries/routinesQuery";
+import { planRoutinesQuery } from "@/utils/queries/planRoutinesQuery";
+import { standaloneRoutineQuery } from "@/utils/queries/trainingPlanQuery";
 import { useMemo } from "react";
 
 export const useTrainningPlan = (id: string | string[]) => {
@@ -13,8 +14,8 @@ export const useTrainningPlan = (id: string | string[]) => {
     [id]
   );
 
-  const { data } = useQuery(activeTrainingPlanQuery);
-  return data[0];
+  const { data, ...results } = useQuery(activeTrainingPlanQuery);
+  return { data: data[0], ...results };
 };
 export const getAllTrainningPlans = (exclude: string[] | string = "") => {
   const { database } = useSystem();
@@ -24,16 +25,23 @@ export const getAllTrainningPlans = (exclude: string[] | string = "") => {
     [exclude]
   );
 
-  const { data: plans } = useQuery(plansQuery);
-
-  return plans;
+  return useQuery(plansQuery);
 };
 export const useRoutinesFromPlan = (planId: string | string[]) => {
   const { database } = useSystem();
 
   const query = useMemo(() => {
-    return routinesQuery(database, planId);
+    return planRoutinesQuery(database, planId);
   }, [planId]);
 
-  return useQuery(query).data;
+  return useQuery(query);
 };
+export function useStandaloneRoutines() {
+  const { database } = useSystem();
+
+  const query = useMemo(() => {
+    return standaloneRoutineQuery(database);
+  }, []);
+
+  return useQuery(query);
+}

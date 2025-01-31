@@ -22,8 +22,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { session, database } = useSystem();
   const [user, setUser] = useState<User>();
 
+  console.log('Auth Context');
+
+
   useEffect(() => {
     const fetchUserData = async () => {
+      console.log('Fetching User Data, session: ', session);
       if (!session?.user) return;
 
       const id = session?.user.id;
