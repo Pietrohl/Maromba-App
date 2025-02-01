@@ -40,7 +40,7 @@ export function RoutineCard({
         router.push({
           pathname: ROUTINE,
           params: {
-            id,
+            routineId: id,
           },
         })
       }

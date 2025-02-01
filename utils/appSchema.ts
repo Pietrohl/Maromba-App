@@ -119,6 +119,7 @@ const routine_exercise_sets = new Table(
     set_number: column.integer,
     weight_load: column.text,
     reps: column.text,
+    routine_id: column.text,
   },
   { indexes: {} }
 );

@@ -5,6 +5,7 @@ import { getTrainningPlans } from "@/utils/queries/getTrainningPlansQuery";
 import { planRoutinesQuery } from "@/utils/queries/planRoutinesQuery";
 import { standaloneRoutineQuery } from "@/utils/queries/trainingPlanQuery";
 import { useMemo } from "react";
+import { routineDetailsQuery } from "../utils/queries/routineDetailsQuery";
 
 export const useTrainningPlan = (id: string | string[]) => {
   const { database } = useSystem();
@@ -42,6 +43,14 @@ export function useStandaloneRoutines() {
   const query = useMemo(() => {
     return standaloneRoutineQuery(database);
   }, []);
+
+  return useQuery(query);
+}
+
+export function useRoutineDetails(planId: string | string[]) {
+  const { database } = useSystem();
+
+  const query = useMemo(() => routineDetailsQuery(database, planId), []);
 
   return useQuery(query);
 }

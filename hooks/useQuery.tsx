@@ -59,10 +59,10 @@ export function useQuery<T = any>(
         //   setError(error);
         // },
         onResult: setData,
-        onError: setError
+        onError: setError,
       });
     setQuery(query.compile());
-  }, [query]);
+  }, [query, executeImmediate, queryOnce]);
 
   return { isLoading, isFetching, refresh, data, error };
 }

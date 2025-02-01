@@ -1,10 +1,12 @@
 import { db } from "@/utils/database";
 import { Expression } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
+import { exerciseSetsQuery } from "./exerciseSetsQuery";
 
 export function routineExercisesQuery(
   database: typeof db,
-  routineId: Expression<string | null> | string
+  routineId: Expression<string | null> | string,
+  details: boolean = false
 ) {
   return (
     database
@@ -26,7 +28,10 @@ export function routineExercisesQuery(
         "routine_exercises.id",
         "routine_exercise_sets.exercise_id"
       )
-      .select((b) => b.fn.count("routine_exercise_sets.id").as("sets"))
+      .select((b) => details ?
+        jsonArrayFrom(exerciseSetsQuery(database, b.ref('routine_exercises.id').$castTo())).as('sets_details')
+        :
+        b.fn.count("routine_exercise_sets.id").as("sets"))
       .where("routine_exercises.routine_id", "=", routineId)
       .groupBy([
         "routine_exercises.exercise_id",
