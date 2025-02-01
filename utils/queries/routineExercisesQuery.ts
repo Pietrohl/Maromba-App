@@ -16,6 +16,7 @@ export function routineExercisesQuery(
         "routine_exercises.load_type",
         "routine_exercises.instruction_text",
         "routine_exercises.exercise_order",
+        "routine_exercises.rest_interval"
       ])
       // .selectAll()
       .innerJoin("exercises", "routine_exercises.exercise_id", "exercises.id")

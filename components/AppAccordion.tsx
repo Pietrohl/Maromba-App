@@ -39,6 +39,31 @@ export function AppAccordion({ data, ...params }: AppAccordionParams) {
           </Accordion.Content>
         </Accordion.Item>
       ))}
+      {/* {data.map(({ RenderComponent, content, ...itemData }) => (
+        <Accordion.Item value={itemData.itemValue} key={itemData.itemValue}>
+          <Accordion.Trigger flexDirection="row" justifyContent="space-between">
+            {({ open }: { open: boolean }) => (
+              <>
+                <H4>{itemData.title}</H4>
+                <Square animation="quick" rotate={open ? "180deg" : "0deg"}>
+                  <FontAwesome name="chevron-down" />
+                </Square>
+              </>
+            )}
+          </Accordion.Trigger>
+          <Accordion.Content>
+            <YStack gap="$2">
+              <FlatList
+                data={content}
+                renderItem={({ item, index }) => (
+                  <RenderComponent key={index} {...item} />
+                )}
+                ItemSeparatorComponent={() => <Separator padding="$2" />}
+              ></FlatList>
+            </YStack>
+          </Accordion.Content>
+        </Accordion.Item>
+      ))} */}
     </Accordion>
   );
 }

@@ -1,6 +1,7 @@
+import { ROUTINE } from "@/constants/url";
 import { router } from "expo-router";
 import React from "react";
-import { Card, XStack, H4, Paragraph } from "tamagui";
+import { Card, XStack, H4, Paragraph, Text, YStack } from "tamagui";
 
 export function RoutineCard({
   name,
@@ -8,15 +9,36 @@ export function RoutineCard({
   id,
 }: {
   name: string;
-  exercises: { name: string | null, id: string }[];
+  exercises: { name: string | null; id: string }[];
   id: string;
 }) {
+  const renderExercises = () => {
+    const content = exercises
+      .map(({ name }) => name || "")
+      .reduce((previous, curr, indx) => {
+        if (indx) previous = previous.concat(", ");
+        return previous.concat(curr);
+      }, "");
+
+    return (
+      <XStack gap="$2">
+        {exercises.length > 0 && (
+          <Paragraph numberOfLines={2} theme="alt2">
+            <>
+              {content}
+            </>
+          </Paragraph>
+        )}
+      </XStack>
+    );
+  };
+
   return (
     <Card
       elevate
       onPress={() =>
         router.push({
-          pathname: "/(app)/(tabs)/home/routine",
+          pathname: ROUTINE,
           params: {
             id,
           },
@@ -24,20 +46,14 @@ export function RoutineCard({
       }
     >
       <Card.Header padded>
-        <XStack jc="space-between" ai="center">
-          <H4>{name}</H4>
-          <Paragraph theme="alt2">{exercises.length} exercises</Paragraph>
-        </XStack>
+        <YStack jc="space-between" ai="flex-start">
+          <H4 textWrap="balance" wordWrap="break-word">
+            {name}
+          </H4>
+          <Text theme="alt2">{exercises.length} exercises</Text>
+        </YStack>
       </Card.Header>
-      <Card.Footer padding="$true">
-        <XStack flexWrap="wrap" gap="$2">
-          {exercises.map((ex, i) => (
-            <Paragraph key={ex.id} theme="alt2">
-              {ex.name}
-            </Paragraph>
-          ))}
-        </XStack>
-      </Card.Footer>
+      <Card.Footer padding="$true">{renderExercises()}</Card.Footer>
     </Card>
   );
 }

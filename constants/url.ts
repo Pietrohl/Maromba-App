@@ -1,1 +1,1 @@
-export const ROUTINE = "/home/routine"
+export const ROUTINE = "/routine"

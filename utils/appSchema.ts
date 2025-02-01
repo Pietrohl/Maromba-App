@@ -107,6 +107,7 @@ const routine_exercises = new Table(
     instruction_text: column.text,
     created_at: column.text,
     updated_at: column.text,
+    rest_interval: column.integer
   },
   { indexes: {} }
 );

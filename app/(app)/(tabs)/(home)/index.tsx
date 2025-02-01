@@ -24,8 +24,6 @@ export default function Train() {
   const { data: otherRoutines } = useRoutinesFromPlan(activePlanId);
   const { data: standaloneRoutines } = useStandaloneRoutines();
 
-  console.log("useStandaloneRoutines", standaloneRoutines);
-
   return (
     <MySafeAreaView>
       <ScrollView>

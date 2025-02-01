@@ -25,7 +25,10 @@ function SignIn() {
   };
 
   useEffect(() => {
-    if (session) router.replace("/home");
+    if (session) {
+      SplashScreen.preventAutoHideAsync();
+      router.replace("/");
+    }
   }, [session]);
 
   if (loading) return <Text>Loading...</Text>;
@@ -34,7 +37,7 @@ function SignIn() {
     <YStack flex={1} justifyContent="center" alignItems="center" padding={16}>
       <Stack space>
         <Text fontSize={24} fontWeight="bold">
-          Login
+          Login on /
         </Text>
         <Controller
           control={control}
