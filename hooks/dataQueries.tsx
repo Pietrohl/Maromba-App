@@ -67,5 +67,7 @@ export function useRoutineDetails(routineId: string) {
     [routineId]
   );
 
+  if (!routineId) return { data: [], isFetching: false, isLoading: false };
+
   return useQuery(query);
 }

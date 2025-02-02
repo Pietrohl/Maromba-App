@@ -11,15 +11,6 @@ export default function TabLayout() {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name="routine"
-        options={{
-          title: "Routine",
-          presentation: "modal",
-          animation: "fade",
-          headerShown: true,
-        }}
-      />
     </Stack>
   );
 }

@@ -28,12 +28,21 @@ export default function RootLayout() {
   }
 
   return (
-      <Suspense fallback={<Text>Loading...</Text>}>
+    <Suspense fallback={<Text>Loading...</Text>}>
       <AuthProvider>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="routine"
+            options={{
+              title: "Routine",
+              presentation: "modal",
+              animation: "fade",
+              headerShown: true,
+            }}
+          />
         </Stack>
       </AuthProvider>
-      </Suspense>
+    </Suspense>
   );
 }

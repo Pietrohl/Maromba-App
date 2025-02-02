@@ -10,21 +10,23 @@ import {
 } from "tamagui";
 import { SectionList } from "react-native";
 import { MySafeAreaView } from "@/components/MySafeAreaView";
-import React from "react";
+import React, { useEffect } from "react";
 
 export default function Modal() {
   const { routineId: id } = useGlobalSearchParams();
-
-  if (!id) return <Redirect href="/" />;
-  const results = useRoutineDetails(id.toString());
   const navigation = useNavigation();
+  const results = useRoutineDetails(id?.toString());
   const { width } = useWindowDimensions();
 
+  if (!id) return <Redirect href="/" />;
+
   const { data, isFetching, isLoading } = results;
-  console.log("REsults!!! ", JSON.stringify(results));
 
   const routine = data[0];
-  if (routine) navigation.setOptions({ title: routine?.name || "" });
+
+  useEffect(() => {
+    if (routine?.name) navigation.setOptions({ title: routine?.name });
+  }, [routine?.name]);
 
   return (
     <View>
