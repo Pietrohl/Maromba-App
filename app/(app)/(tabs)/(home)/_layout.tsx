@@ -15,9 +15,9 @@ export default function TabLayout() {
         name="routine"
         options={{
           title: "Routine",
-          presentation: "transparentModal",
+          presentation: "modal",
           animation: "fade",
-          headerShown: false,
+          headerShown: true,
         }}
       />
     </Stack>

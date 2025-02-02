@@ -115,7 +115,7 @@ const routine_exercises = new Table(
 const routine_exercise_sets = new Table(
   {
     // id column (text) is automatically included
-    exercise_id: column.integer,
+    exercise_id: column.text,
     set_number: column.integer,
     weight_load: column.text,
     reps: column.text,
