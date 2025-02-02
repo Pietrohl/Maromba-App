@@ -1,8 +1,10 @@
 import { useRoutineDetails } from "@/hooks/dataQueries";
 import { Redirect, useGlobalSearchParams, useNavigation } from "expo-router";
 import {
+  H3,
   H4,
   Paragraph,
+  Separator,
   useWindowDimensions,
   View,
   XStack,
@@ -29,12 +31,12 @@ export default function Modal() {
   }, [routine?.name]);
 
   return (
-    <View>
+    <MySafeAreaView>
       {isLoading || isFetching || !routine ? (
         <Paragraph>Loading...</Paragraph>
       ) : (
-        <YStack alignItems="center" gap="$4">
-          <H4>{routine.name}</H4>
+        <YStack alignItems="center" gap="$2" padding="$2">
+          <H3>{routine.name}</H3>
 
           <SectionList
             sections={routine.exercises.map(
@@ -44,53 +46,80 @@ export default function Modal() {
               })
             )}
             keyExtractor={(item) => item.id}
-            renderItem={({ item, section }) => (
-              <XStack width={width} justifyContent="space-between">
-                <YStack
-                  flex={1}
-                  padding="$2"
-                  borderBottomWidth={1}
-                  borderColor="$borderColor"
-                >
-                  <Paragraph>{Number(item.reps)}</Paragraph>
-                </YStack>
-                <YStack
-                  flex={2}
-                  padding="$2"
-                  paddingEnd="$6"
-                  borderBottomWidth={1}
-                  borderColor="$borderColor"
-                  alignItems="flex-end"
-                >
-                  <Paragraph>
-                    {Number(item.weight_load).toFixed()}
-                    {section.load_type === "rm_percent" ? "%RM" : "kg"}
-                  </Paragraph>
-                </YStack>
-              </XStack>
-            )}
             renderSectionHeader={({ section }) => (
-              <XStack backgroundColor="$backgroundStrong" width={width}>
-                <YStack flex={1} padding="$2">
-                  <Paragraph fontWeight="bold" fontSize="$5">
-                    {section.name}
-                  </Paragraph>
+              <YStack paddingTop="$6" gap="$2">
+                <YStack flex={1}>
+                  <H4>{section.name}</H4>
                 </YStack>
-                <YStack
-                  flex={2}
-                  padding="$2"
-                  paddingEnd="$6"
-                  alignItems="flex-end"
+                <XStack
+                  backgroundColor="$backgroundStrong"
+                  width={width}
+                  justifyContent="space-between"
                 >
-                  <Paragraph fontWeight="bold" fontSize="$5">
-                    Weight
-                  </Paragraph>
-                </YStack>
-              </XStack>
+                  <YStack flex={1} padding="$2" alignItems="center">
+                    <Paragraph fontWeight="300" fontSize="$5">
+                      Set
+                    </Paragraph>
+                  </YStack>
+                  <YStack flex={1} padding="$2" alignItems="center">
+                    <Paragraph fontWeight="300" fontSize="$5">
+                      Reps
+                    </Paragraph>
+                  </YStack>
+                  <YStack flex={3} padding="$2" alignItems="center">
+                    <Paragraph fontWeight="300" fontSize="$5">
+                      Intensity
+                    </Paragraph>
+                  </YStack>
+                  <YStack
+                    flex={3}
+                    padding="$2"
+                    paddingEnd="$6"
+                    alignItems="center"
+                    textWrap="stable"
+                  >
+                    <Paragraph fontWeight="300" fontSize="$5">
+                      Target Weight
+                    </Paragraph>
+                  </YStack>
+                </XStack>
+                <Separator />
+              </YStack>
+            )}
+            renderItem={({ item, section }) => (
+              <YStack>
+                <XStack width={width} justifyContent="space-between">
+                  <YStack flex={1} padding="$2" alignItems="center">
+                    <Paragraph>{Number(item.set_number).toFixed()} </Paragraph>
+                  </YStack>
+                  <YStack flex={1} padding="$2" alignItems="center">
+                    <Paragraph>{Number(item.reps)}</Paragraph>
+                  </YStack>
+                  <YStack flex={3} padding="$2" alignItems="center">
+                    <Paragraph>
+                      {section.load_type === "rm_percent"
+                        ? Number(item.weight_load).toFixed() + "% 1RM"
+                        : "-"}
+                    </Paragraph>
+                  </YStack>
+                  <YStack
+                    flex={3}
+                    padding="$2"
+                    paddingEnd="$6"
+                    alignItems="center"
+                    textWrap="stable"
+                  >
+                    <Paragraph>
+                      {Number(item.weight_load).toFixed()}
+                      {section.load_type === "rm_percent" ? "%RM" : "kg"}
+                    </Paragraph>
+                  </YStack>
+                </XStack>
+              </YStack>
             )}
           />
         </YStack>
       )}
-    </View>
+    </MySafeAreaView>
   );
 }
