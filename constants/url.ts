@@ -1,1 +1,1 @@
-export const ROUTINE = "/routine"
+export const ROUTINE = "/routine/[routineId]"

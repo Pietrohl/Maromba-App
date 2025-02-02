@@ -16,7 +16,7 @@ export const SafeAreaModalView = ({
     <MySafeAreaView
       style={{
         paddingTop: -insets?.top,
-        paddingBottom: insets?.top,
+        paddingBottom: insets?.top*2,
         paddingRight: insets?.right,
         paddingLeft: insets?.left,
       }}

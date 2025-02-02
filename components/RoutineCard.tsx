@@ -41,6 +41,7 @@ export function RoutineCard({
           pathname: ROUTINE,
           params: {
             routineId: id,
+            name
           },
         })
       }

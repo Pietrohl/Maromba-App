@@ -8,12 +8,6 @@ import "react-native-reanimated";
 import { useSystem } from "@/hooks/useSystem";
 import { AuthProvider } from "@/providers/AuthContext";
 
-if (Platform.OS === "web") {
-  require("@tamagui/core/reset.css");
-}
-
-SplashScreen.preventAutoHideAsync();
-
 export default function RootLayout() {
   const { loading, session, initDB } = useSystem();
 
@@ -33,13 +27,17 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
-            name="routine"
-            options={{
-              title: "Routine",
+            name="routine/[routineId]"
+            options={({ route }) => ({
+              title:
+                (route.params &&
+                  "name" in route.params &&
+                  (route.params?.name as string)) ||
+                "Routine",
               presentation: "modal",
               animation: "fade",
               headerShown: true,
-            }}
+            })}
           />
         </Stack>
       </AuthProvider>

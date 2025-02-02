@@ -26,7 +26,6 @@ function SignIn() {
 
   useEffect(() => {
     if (session) {
-      SplashScreen.preventAutoHideAsync();
       router.replace("/");
     }
   }, [session]);
@@ -37,7 +36,7 @@ function SignIn() {
     <YStack flex={1} justifyContent="center" alignItems="center" padding={16}>
       <Stack space>
         <Text fontSize={24} fontWeight="bold">
-          Login on /
+          Login
         </Text>
         <Controller
           control={control}

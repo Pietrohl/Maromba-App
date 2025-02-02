@@ -9,6 +9,10 @@ import "react-native-reanimated";
 import tamaguiConfig from "@/tamagui.config";
 import { SystemProvider } from "@/providers/System";
 import { AuthProvider } from "@/providers/AuthContext";
+import {
+  SafeAreaProvider,
+  initialWindowMetrics,
+} from "react-native-safe-area-context";
 
 if (__DEV__) {
   require("../ReactotronConfig");
@@ -18,6 +22,7 @@ if (Platform.OS === "web") {
   require("@tamagui/core/reset.css");
 }
 
+// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -27,10 +32,6 @@ export default function RootLayout() {
   });
 
   const colorScheme = useColorScheme();
-
-  if (!loaded) {
-    return null;
-  }
 
   if (Platform.OS === "web") {
     // Use a basic custom layout on web.
@@ -43,12 +44,23 @@ export default function RootLayout() {
       </div>
     );
   }
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
 
   return (
-    <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
-      <SystemProvider>
-        <Slot />
-      </SystemProvider>
-    </TamaguiProvider>
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <TamaguiProvider config={tamaguiConfig} defaultTheme={colorScheme!}>
+        <SystemProvider>
+          <Slot />
+        </SystemProvider>
+      </TamaguiProvider>
+    </SafeAreaProvider>
   );
 }
