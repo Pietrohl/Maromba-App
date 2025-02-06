@@ -1,5 +1,5 @@
 import { db } from "@/utils/database";
-import { planRoutinesQuery } from "@/utils/queries/planRoutinesQuery";
+import { planRoutinesQuery } from "@/utils/SQLQueries/planRoutinesQuery";
 import { Expression } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
 

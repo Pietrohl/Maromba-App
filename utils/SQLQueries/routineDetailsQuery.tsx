@@ -1,5 +1,5 @@
 import { db } from "@/utils/database";
-import { routineExercisesWithSetsDetailsQuery } from "@/utils/queries/routineExercisesQuery";
+import { routineExercisesWithSetsDetailsQuery } from "@/utils/SQLQueries/routineExercisesQuery";
 import { Expression } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
 

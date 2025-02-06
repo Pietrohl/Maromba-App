@@ -1,6 +1,6 @@
 import { db } from "@/utils/database";
 import { Expression } from "kysely";
-import { routineExercisesQuery } from "@/utils/queries/routineExercisesQuery";
+import { routineExercisesQuery } from "@/utils/SQLQueries/routineExercisesQuery";
 import { jsonArrayFrom } from "kysely/helpers/sqlite";
 
 export const planRoutinesQuery = (
