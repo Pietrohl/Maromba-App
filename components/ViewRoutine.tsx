@@ -1,6 +1,6 @@
 import { MySafeAreaView } from "@/components/MySafeAreaView";
 import { useRoutineDetails } from "@/hooks/api/dataQueries";
-import { Database } from "@/utils/appSchema";
+import { Database, RoutineExercises } from "@/utils/appSchema";
 import { useGlobalSearchParams, useNavigation, Redirect } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { SectionList } from "react-native";
@@ -19,12 +19,7 @@ export default function ViewRoutine({
 }: {
   routine: {
     name: string | null;
-    exercises: Array<
-      Partial<Database["exercises"]> &
-        Partial<Database["routine_exercises"]> & {
-          sets_details: Database["routine_exercise_sets"][];
-        }
-    >;
+    exercises: Array<Partial<Database["exercises"]> & Partial<RoutineExercises>>;
   };
 }): JSX.Element {
   // const [routine] = useState(routineParam)
@@ -35,11 +30,11 @@ export default function ViewRoutine({
       <H3>{routine.name}</H3>
 
       <SectionList
-        sections={routine.exercises.map(({ sets_details, ...exercises }) => ({
-          data: sets_details,
+        sections={routine.exercises.map(({ exercise_sets, ...exercises }) => ({
+          data: exercise_sets || [],
           ...exercises,
         }))}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(_, index) => index.toString()}
         renderSectionHeader={({ section }) => (
           <YStack paddingTop="$6" gap="$2">
             <YStack flex={1}>
@@ -80,11 +75,11 @@ export default function ViewRoutine({
             <Separator />
           </YStack>
         )}
-        renderItem={({ item, section }) => (
+        renderItem={({ item, section, index }) => (
           <YStack>
             <XStack width={width} justifyContent="space-between">
               <YStack flex={1} padding="$2" alignItems="center">
-                <Paragraph>{Number(item.set_number).toFixed()} </Paragraph>
+                <Paragraph>{Number(index + 1).toFixed()} </Paragraph>
               </YStack>
               <YStack flex={1} padding="$2" alignItems="center">
                 <Paragraph>{Number(item.reps)}</Paragraph>

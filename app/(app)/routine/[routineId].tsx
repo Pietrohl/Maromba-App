@@ -10,10 +10,19 @@ export default function Modal() {
   const { routineId: id } = useGlobalSearchParams();
   const navigation = useNavigation();
   const results = useRoutineDetails(id?.toString());
-  const [edit, setEdit] = useState(true);
+  console.log(JSON.stringify(results));
+  const [edit, setEdit] = useState(false);
 
   const { data, isFetching, isLoading, refresh } = results;
   const routine = data[0];
+
+  // const { exercises } = routine;
+
+  // const { exercise_sets } = exercises[0];
+
+  console.log("Routine: ", routine);
+
+  // const { reps } = exercise_sets[0];
 
   useEffect(() => {
     if (routine?.name) navigation.setOptions({ title: routine?.name });

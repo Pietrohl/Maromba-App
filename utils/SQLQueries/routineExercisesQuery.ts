@@ -16,17 +16,12 @@ export function routineExercisesQuery(
       "routine_exercises.load_type",
       "routine_exercises.instruction_text",
       "routine_exercises.exercise_order",
-      "routine_exercises.rest_interval"
+      "routine_exercises.rest_interval",
+      "routine_exercises.set_count"
     ])
     // .selectAll()
     .innerJoin("exercises", "routine_exercises.exercise_id", "exercises.id")
     .select(["exercises.name", "exercises.identifier"])
-    .leftJoin(
-      "routine_exercise_sets",
-      "routine_exercises.id",
-      "routine_exercise_sets.exercise_id"
-    )
-    .select((b) => b.fn.count("routine_exercise_sets.id").as("sets"))
     .where("routine_exercises.routine_id", "=", routineId)
     .groupBy([
       "routine_exercises.exercise_id",
@@ -43,7 +38,7 @@ export function routineExercisesQuery(
 
 export function routineExercisesWithSetsDetailsQuery(
   database: typeof db,
-  routineId: Expression<string  | null> | string 
+  routineId: Expression<string | null> | string
 ) {
 
   return database
@@ -55,11 +50,12 @@ export function routineExercisesWithSetsDetailsQuery(
       "routine_exercises.load_type",
       "routine_exercises.instruction_text",
       "routine_exercises.exercise_order",
-      "routine_exercises.rest_interval"
+      "routine_exercises.rest_interval",
+      "routine_exercises.exercise_sets"
     ])
     .innerJoin("exercises", "routine_exercises.exercise_id", "exercises.id")
     .select(["exercises.name", "exercises.identifier"])
-    .where("routine_exercises.routine_id", "==" ,routineId)
+    .where("routine_exercises.routine_id", "==", routineId)
     .groupBy([
       "routine_exercises.exercise_id",
       "exercise_order",
@@ -69,8 +65,6 @@ export function routineExercisesWithSetsDetailsQuery(
       "identifier",
     ])
     .orderBy("routine_exercises.exercise_order asc")
-    .select((b) => jsonArrayFrom(exerciseSetsQuery(database, b.ref('routine_exercises.id'))).as('sets_details'))
-
 
 
 }
