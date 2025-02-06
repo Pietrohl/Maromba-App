@@ -1,12 +1,12 @@
 import { useQuery } from "@/hooks/useQuery";
 import { useSystem } from "@/hooks/useSystem";
-import { detailedTrainingPlansQuery } from "@/utils/queries/detailedTrainingPlansQuery";
-import { getTrainningPlans } from "@/utils/queries/getTrainningPlansQuery";
-import { planRoutinesQuery } from "@/utils/queries/planRoutinesQuery";
-import { standaloneRoutineQuery } from "@/utils/queries/trainingPlanQuery";
+import { detailedTrainingPlansQuery } from "@/utils/SQLQueries/detailedTrainingPlansQuery";
+import { getTrainningPlans } from "@/utils/SQLQueries/getTrainningPlansQuery";
+import { planRoutinesQuery } from "@/utils/SQLQueries/planRoutinesQuery";
+import { standaloneRoutineQuery } from "@/utils/SQLQueries/trainingPlanQuery";
 import { useMemo } from "react";
-import { routineDetailsQuery } from "../utils/queries/routineDetailsQuery";
-import { routineExercisesWithSetsDetailsQuery } from "@/utils/queries/routineExercisesQuery";
+import { routineDetailsQuery } from "../../utils/SQLQueries/routineDetailsQuery";
+import { routineExercisesWithSetsDetailsQuery } from "@/utils/SQLQueries/routineExercisesQuery";
 
 export const useTrainningPlan = (id: string | string[]) => {
   const { database } = useSystem();

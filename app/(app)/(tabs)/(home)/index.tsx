@@ -12,7 +12,7 @@ import {
   getAllTrainningPlans,
   useRoutinesFromPlan,
   useStandaloneRoutines,
-} from "../../../../hooks/dataQueries";
+} from "../../../../hooks/api/dataQueries";
 import { NextRoutineCard } from "@/components/NextRoutineCard";
 
 export default function Train() {

@@ -1,5 +1,5 @@
 import { MySafeAreaView } from "@/components/MySafeAreaView";
-import { useRoutineDetails } from "@/hooks/dataQueries";
+import { useRoutineDetails } from "@/hooks/api/dataQueries";
 import { Database } from "@/utils/appSchema";
 import { useGlobalSearchParams, useNavigation, Redirect } from "expo-router";
 import React, { useEffect, useState } from "react";

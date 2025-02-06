@@ -1,11 +1,9 @@
-import { useRoutineDetails } from "@/hooks/dataQueries";
-import { Redirect, useGlobalSearchParams, useNavigation } from "expo-router";
+import { useRoutineDetails } from "@/hooks/api/dataQueries";
+import { useGlobalSearchParams, useNavigation } from "expo-router";
 import { Paragraph } from "tamagui";
-import { MySafeAreaView } from "@/components/MySafeAreaView";
 import React, { useEffect, useState } from "react";
 import ViewRoutine from "@/components/ViewRoutine";
 import EditRoutine from "@/components/EditRoutine";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SafeAreaModalView } from "@/components/SafeAreaModalView";
 
 export default function Modal() {

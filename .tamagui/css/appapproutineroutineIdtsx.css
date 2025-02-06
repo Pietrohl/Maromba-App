@@ -1,0 +1,15 @@
+:root ._dsp-inline{display:inline;}
+:root ._bxs-border-box{box-sizing:border-box;}
+:root ._ww-break-word{word-wrap:break-word;}
+:root ._mt-0px{margin-top:0px;}
+:root ._mr-0px{margin-right:0px;}
+:root ._mb-0px{margin-bottom:0px;}
+:root ._ml-0px{margin-left:0px;}
+:root ._ff-var--f-fami1299220{font-family:var(--f-family);}
+:root ._fow-var--f-weig1244712878{font-weight:var(--f-weight-4);}
+:root ._ls-var--f-lett938244340{letter-spacing:var(--f-letterSpacing-4);}
+:root ._fos-var--f-size1236538{font-size:var(--f-size-4);}
+:root ._lh-var--f-line1118832019{line-height:var(--f-lineHeight-4);}
+:root ._col-var--color1281{color:var(--color);}
+:root ._ussel-auto{user-select:auto;-webkit-user-select:auto;}
+:root ._whiteSpace-normal{white-space:normal;}
