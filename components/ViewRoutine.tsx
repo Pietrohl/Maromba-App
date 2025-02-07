@@ -3,7 +3,7 @@ import { useRoutineDetails } from "@/hooks/api/dataQueries";
 import { Database, RoutineExercises } from "@/utils/appSchema";
 import { useGlobalSearchParams, useNavigation, Redirect } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { SectionList } from "react-native";
+import { RefreshControl, SectionList } from "react-native";
 import {
   useWindowDimensions,
   Paragraph,
@@ -16,13 +16,18 @@ import {
 
 export default function ViewRoutine({
   routine,
+  refreshing,
+  refresh,
 }: {
   routine: {
     name: string | null;
-    exercises: Array<Partial<Database["exercises"]> & Partial<RoutineExercises>>;
+    exercises: Array<
+      Partial<Database["exercises"]> & Partial<RoutineExercises>
+    >;
   };
+  refreshing: boolean;
+  refresh: () => Promise<void>;
 }): JSX.Element {
-  // const [routine] = useState(routineParam)
   const { width } = useWindowDimensions();
 
   return (
@@ -30,6 +35,9 @@ export default function ViewRoutine({
       <H3>{routine.name}</H3>
 
       <SectionList
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={refresh} />
+        }
         sections={routine.exercises.map(({ exercise_sets, ...exercises }) => ({
           data: exercise_sets || [],
           ...exercises,

@@ -33,6 +33,7 @@
     "@tamagui/font-inter": "^1.110.2",
     "@tamagui/metro-plugin": "^1.110.2",
     "aes-js": "^3.1.2",
+    "eas-cli": "^14.7.1",
     "expo": "~51.0.34",
     "expo-constants": "~16.0.2",
     "expo-crypto": "~13.0.2",

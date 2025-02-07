@@ -1,12 +1,14 @@
 import "@azure/core-asynciterator-polyfill";
 import { Suspense } from "react";
 import { Platform } from "react-native";
-import { Redirect, Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
+import { Redirect, router, Stack } from "expo-router";
 import { Text } from "tamagui";
 import "react-native-reanimated";
 import { useSystem } from "@/hooks/useSystem";
 import { AuthProvider } from "@/providers/AuthContext";
+import AppHeader from "@/components/AppHeaderButtons";
+import AppHeaderButtons from "@/components/AppHeaderButtons";
+import { ROUTINE } from "@/constants/url";
 
 export default function RootLayout() {
   const { loading, session, initDB } = useSystem();
@@ -28,15 +30,10 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
             name="routine/[routineId]"
-            options={({ route }) => ({
-              title:
-                (route.params &&
-                  "name" in route.params &&
-                  (route.params?.name as string)) ||
-                "Routine",
+            options={() => ({
               presentation: "modal",
               animation: "fade",
-              headerShown: true,
+              headerShown: false,
             })}
           />
         </Stack>
